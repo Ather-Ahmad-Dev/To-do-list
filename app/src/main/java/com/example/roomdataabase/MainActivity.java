@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +48,35 @@ public class MainActivity extends AppCompatActivity {
         adapter = new TaskAdapter();
         recyclerView.setAdapter(adapter);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false; // No move functionality needed
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                TaskEntity taskToDelete = adapter.getTaskAt(position);
+                taskViewModel.delete(taskToDelete);
+            }
+        }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(task -> {
+            editTextTitle.setText(task.getTitle());
+            editTextDescription.setText(task.getDescription());
+
+            buttonAddTask.setText("Update Task");
+            buttonAddTask.setOnClickListener(v -> {
+                task.setTitle(editTextTitle.getText().toString());
+                task.setDescription(editTextDescription.getText().toString());
+                taskViewModel.update(task);
+                buttonAddTask.setText("Add Task");
+                editTextTitle.setText("");
+                editTextDescription.setText("");
+            });
+        });
+
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.getAllTasks().observe(this, new Observer<List<TaskEntity>>() {
             @Override
@@ -66,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
                     task.setTitle(title);
                     task.setDescription(description);
                     taskViewModel.insert(task);
+
+                    editTextTitle.setText("");
+                    editTextDescription.setText("");
 
                //     displayTasks();
                 }

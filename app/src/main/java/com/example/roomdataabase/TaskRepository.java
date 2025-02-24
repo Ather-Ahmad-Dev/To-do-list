@@ -27,7 +27,7 @@ public class TaskRepository {
     }
 
     public void update(TaskEntity task){
-        new DeleteTaskAsync(taskDao).execute(task);
+        new UpdateTaskAsync(taskDao).execute(task);
     }
 
     public void delete(TaskEntity task){

@@ -2,6 +2,9 @@ package com.example.roomdataabase;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import java.util.Date;
 
 /** Entity:
  *          An entity is like a table in the database.
@@ -21,6 +24,7 @@ import androidx.room.PrimaryKey;
  */
 
 @Entity(tableName = "tasks")
+@TypeConverters(Converters.class)
 public class TaskEntity {
 
     // creating columns in tables i.e. field in entities.
@@ -29,6 +33,23 @@ public class TaskEntity {
 
     private String title, description;
     private boolean isCompleted;
+    private Date createdAt;
+
+    public TaskEntity(){}
+
+    public TaskEntity(String title, String description, Date createdAt) {
+        this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
     // now to created method to handle assign data and retrieve data from columns
     // i.e. getters and setters
