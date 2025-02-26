@@ -18,7 +18,7 @@ public class TaskViewModel extends AndroidViewModel {
     }
 
     public void insert(TaskEntity task) {
-        repository.inset(task);
+        repository.insert(task);
     }
 
     public LiveData<List<TaskEntity>> getAllTasks() {
@@ -36,4 +36,13 @@ public class TaskViewModel extends AndroidViewModel {
     public void deleteAllTasks() {
         repository.deleteAllTasks();
     }
+
+    public LiveData<List<TaskEntity>> getTasksSortedByTitle() {
+        return repository.getTasksSortedByTitle();
+    }
+
+    public LiveData<List<TaskEntity>> getTasksSortedByDate() {
+        return repository.getTasksSortedByDate();
+    }
+
 }

@@ -2,8 +2,10 @@ package com.example.roomdataabase;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TaskViewModel taskViewModel;
     private EditText editTextTitle, editTextDescription;
-    private TextView textViewTasks;
     private TaskAdapter adapter;
 
     @Override
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextTaskDescription);
         Button buttonAddTask = findViewById(R.id.buttonAddTask);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        textViewTasks = findViewById(R.id.textViewTasks);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false; // No move functionality needed
+                return false;
             }
 
             @Override
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         taskViewModel.getAllTasks().observe(this, new Observer<List<TaskEntity>>() {
             @Override
             public void onChanged(List<TaskEntity> tasks) {
-                adapter.setTasks(tasks); // Update RecyclerView when data changes
+                adapter.setTasks(tasks);
             }
         });
 
@@ -99,27 +99,22 @@ public class MainActivity extends AppCompatActivity {
 
                     editTextTitle.setText("");
                     editTextDescription.setText("");
-
-               //     displayTasks();
                 }
             }
         });
 
-        //displayTasks();
-    }
-
-    private void displayTasks() {
-        taskViewModel.getAllTasks().observe(this, tasks -> {
-            if (tasks != null) {
-                StringBuilder tasksText = new StringBuilder();
-                for (TaskEntity task : tasks) {
-                    tasksText.append(task.getTitle()).append(": ").append(task.getDescription()).append("\n");
+        Spinner spinnerSort = findViewById(R.id.spinnerSort);
+        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    taskViewModel.getTasksSortedByTitle().observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
+                } else {
+                    taskViewModel.getTasksSortedByDate().observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
                 }
-                textViewTasks.setText(tasksText.toString());
-            } else {
-                textViewTasks.setText("No tasks available.");
             }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
-
 }

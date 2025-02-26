@@ -6,28 +6,10 @@ import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-/** Entity:
- *          An entity is like a table in the database.
- *          Creating more entity classes is like creating more tables in your database.
- *          Each variable in this entity class is like a colum that is going to store some values.
- *          e.g.
- * <p>
- *          id   title    description           isCompleted
- *          1  homework   do maths homework         yes
- *          2  exercise   do push ups               no
- * <p>
- *          for more clarity.
- *          The first row will gong to be an instance of this class aka an object of this class
- *          that is gonna hold 4 values.
- *<p>
- *          Also but annotate the class with @Entity
- */
-
 @Entity(tableName = "tasks")
 @TypeConverters(Converters.class)
 public class TaskEntity {
 
-    // creating columns in tables i.e. field in entities.
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -50,9 +32,6 @@ public class TaskEntity {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-
-    // now to created method to handle assign data and retrieve data from columns
-    // i.e. getters and setters
 
     public int getId(){
         return id;

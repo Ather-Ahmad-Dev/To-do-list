@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RoomDataabase</string>
+    <string-array name="sort_options">
+        <item>Sort by Title</item>
+        <item>Sort by Date</item>
+    </string-array>
 </resources>

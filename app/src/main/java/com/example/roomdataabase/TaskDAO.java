@@ -41,4 +41,11 @@ public interface TaskDAO {
 
     @Query("Delete FROM tasks")
     void deleteAllTasks();
+
+    @Query("SELECT * FROM tasks ORDER BY title ASC")
+    LiveData<List<TaskEntity>> getTasksSortedByTitle();
+
+    @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
+    LiveData<List<TaskEntity>> getTasksSortedByDate();
+
 }
