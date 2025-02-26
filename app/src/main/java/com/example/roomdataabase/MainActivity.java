@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Spinner;
 
@@ -20,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private TaskViewModel taskViewModel;
-    private EditText editTextTitle, editTextDescription;
     private TaskAdapter adapter;
 
     @Override
@@ -41,11 +39,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        editTextTitle = findViewById(R.id.editTextTaskTitle);
-        editTextDescription = findViewById(R.id.editTextTaskDescription);
-        Button buttonAddTask = findViewById(R.id.buttonAddTask);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         adapter = new TaskAdapter();
@@ -70,18 +64,15 @@ public class MainActivity extends AppCompatActivity {
         }).attachToRecyclerView(recyclerView);
 
         adapter.setOnItemClickListener(task -> {
-            editTextTitle.setText(task.getTitle());
-            editTextDescription.setText(task.getDescription());
+            AddTaskBottomSheet bottomSheet = new AddTaskBottomSheet();
 
-            buttonAddTask.setText("Update Task");
-            buttonAddTask.setOnClickListener(v -> {
-                task.setTitle(editTextTitle.getText().toString());
-                task.setDescription(editTextDescription.getText().toString());
-                taskViewModel.update(task);
-                buttonAddTask.setText("Add Task");
-                editTextTitle.setText("");
-                editTextDescription.setText("");
-            });
+            Bundle bundle = new Bundle();
+            bundle.putInt("taskId", task.getId());
+            bundle.putString("taskTitle", task.getTitle());
+            bundle.putString("taskDescription", task.getDescription());
+            bottomSheet.setArguments(bundle);
+
+            bottomSheet.show(getSupportFragmentManager(), "EditTaskBottomSheet");
         });
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
@@ -89,24 +80,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<TaskEntity> tasks) {
                 adapter.setTasks(tasks);
-            }
-        });
-
-        buttonAddTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = editTextTitle.getText().toString();
-                String description = editTextDescription.getText().toString();
-
-                if (!title.isEmpty()) {
-                    TaskEntity task = new TaskEntity();
-                    task.setTitle(title);
-                    task.setDescription(description);
-                    taskViewModel.insert(task);
-
-                    editTextTitle.setText("");
-                    editTextDescription.setText("");
-                }
             }
         });
 
@@ -134,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         int savedSortOption = sharedPreferences.getInt("sortOption", 0);
         spinnerSort.setSelection(savedSortOption);
 
-
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -149,5 +121,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // FloatingActionButton Click -> Open AddTaskBottomSheet
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            AddTaskBottomSheet bottomSheet = new AddTaskBottomSheet();
+            bottomSheet.show(getSupportFragmentManager(), "AddTaskBottomSheet");
+        });
+
     }
 }

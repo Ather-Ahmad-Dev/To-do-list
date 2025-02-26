@@ -15,34 +15,6 @@
         android:layout_height="wrap_content"
         android:queryHint="Search tasks"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter task title">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextTaskTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter task description">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextTaskDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonAddTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add Task"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-
     <Spinner
         android:id="@+id/spinnerSort"
         android:layout_width="wrap_content"
@@ -54,4 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="Add Task"/>
+
 </LinearLayout>
