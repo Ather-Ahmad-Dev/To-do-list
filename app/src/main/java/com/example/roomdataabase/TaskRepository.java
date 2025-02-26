@@ -45,4 +45,9 @@ public class TaskRepository {
     public LiveData<List<TaskEntity>> getTasksSortedByDate() {
         return taskDao.getTasksSortedByDate();
     }
+
+    public LiveData<List<TaskEntity>> searchTasks(String query) {
+        return taskDao.searchTasks("%" + query + "%");
+    }
+
 }

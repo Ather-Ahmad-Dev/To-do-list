@@ -1,12 +1,13 @@
 package com.example.roomdataabase;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -59,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 int position = viewHolder.getAdapterPosition();
                 TaskEntity taskToDelete = adapter.getTaskAt(position);
                 taskViewModel.delete(taskToDelete);
+
+                Snackbar.make(recyclerView, "Task deleted", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", v -> taskViewModel.insert(taskToDelete))
+                        .show();
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -103,18 +110,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         Spinner spinnerSort = findViewById(R.id.spinnerSort);
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editor.putInt("sortOption", position);
+                editor.apply();
+
                 if (position == 0) {
                     taskViewModel.getTasksSortedByTitle().observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
                 } else {
                     taskViewModel.getTasksSortedByDate().observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        int savedSortOption = sharedPreferences.getInt("sortOption", 0);
+        spinnerSort.setSelection(savedSortOption);
+
+
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                taskViewModel.searchTasks(query).observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                taskViewModel.searchTasks(newText).observe(MainActivity.this, tasks -> adapter.setTasks(tasks));
+                return false;
+            }
         });
     }
 }

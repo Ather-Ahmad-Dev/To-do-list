@@ -21,15 +21,9 @@ import java.util.List;
 @Dao
 public interface TaskDAO {
 
-    /**
-     * simply use @Insert to write an insert query
-     * here in insert we are inserting a task object in the table
-     * means inserting id, title, description, and flag/state
-     */
     @Insert
     void insetTask(TaskEntity task);
 
-    // you can also write customized queries like this.
     @Query("SELECT * FROM tasks")
     LiveData<List<TaskEntity>> getAllTasks();
 
@@ -47,5 +41,8 @@ public interface TaskDAO {
 
     @Query("SELECT * FROM tasks ORDER BY createdAt DESC")
     LiveData<List<TaskEntity>> getTasksSortedByDate();
+
+    @Query("SELECT * FROM tasks WHERE title LIKE :query ORDER BY title ASC")
+    LiveData<List<TaskEntity>> searchTasks(String query);
 
 }

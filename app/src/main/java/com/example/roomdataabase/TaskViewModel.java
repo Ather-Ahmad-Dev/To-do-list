@@ -45,4 +45,8 @@ public class TaskViewModel extends AndroidViewModel {
         return repository.getTasksSortedByDate();
     }
 
+    public LiveData<List<TaskEntity>> searchTasks(String query) {
+        return repository.searchTasks(query);
+    }
+
 }
