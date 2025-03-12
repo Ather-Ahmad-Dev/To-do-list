@@ -18,7 +18,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_task, parent, false);
         return new TaskViewHolder(view);
     }
 
@@ -54,7 +54,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public void setTasks(List<TaskEntity> tasks) {
         this.tasks = tasks;
-        notifyDataSetChanged(); // Refresh RecyclerView when data changes
+        notifyDataSetChanged();
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -62,8 +62,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewTitle = itemView.findViewById(android.R.id.text1);
-            textViewDescription = itemView.findViewById(android.R.id.text2);
+            textViewTitle = itemView.findViewById(R.id.textViewTaskTitle);
+            textViewDescription = itemView.findViewById(R.id.textViewTaskDescription);
         }
     }
 }

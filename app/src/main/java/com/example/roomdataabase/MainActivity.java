@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // FloatingActionButton Click -> Open AddTaskBottomSheet
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             AddTaskBottomSheet bottomSheet = new AddTaskBottomSheet();
